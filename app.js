@@ -29,7 +29,7 @@
       name: "客户第一",
       short: "客",
       color: "#1665d8",
-      image: "assets/value-badges-cropped/客户第一.png",
+      image: "assets/optimized/value-badges/客户第一.png",
       x: 620,
       y: 308,
       text: "把真实需求放在前面",
@@ -39,7 +39,7 @@
       name: "团队协作",
       short: "协",
       color: "#18a99a",
-      image: "assets/value-badges-cropped/团队协作.png",
+      image: "assets/optimized/value-badges/团队协作.png",
       x: 3000,
       y: 268,
       text: "彼此补位一起抵达",
@@ -49,7 +49,7 @@
       name: "拼搏进取",
       short: "搏",
       color: "#f0643c",
-      image: "assets/value-badges-cropped/拼搏进取.png",
+      image: "assets/optimized/value-badges/拼搏进取.png",
       x: 5900,
       y: 250,
       text: "关键时刻再向前一步",
@@ -59,7 +59,7 @@
       name: "持续学习",
       short: "学",
       color: "#24a76d",
-      image: "assets/value-badges-cropped/持续学习.png",
+      image: "assets/optimized/value-badges/持续学习.png",
       x: 9100,
       y: 250,
       text: "每天升级一点点",
@@ -69,7 +69,7 @@
       name: "创新创业",
       short: "创",
       color: "#6f4ce6",
-      image: "assets/value-badges-cropped/创新创业.png",
+      image: "assets/optimized/value-badges/创新创业.png",
       x: 12280,
       y: 205,
       text: "敢想敢试创造新解法",
@@ -79,13 +79,15 @@
   const badgeImages = new Map(
     values.map((badge) => {
       const image = new Image();
+      image.decoding = "async";
       image.src = badge.image;
       image.addEventListener("load", draw);
       return [badge.id, image];
     }),
   );
   const playerImage = new Image();
-  playerImage.src = "assets/opossum-q-sprite.png";
+  playerImage.decoding = "async";
+  playerImage.src = "assets/optimized/opossum-q-sprite.png";
   playerImage.addEventListener("load", draw);
 
   const platforms = [
@@ -229,7 +231,7 @@
     }
   }
 
-  window.addEventListener("resize", resizeCanvas);
+  window.addEventListener("resize", queueResizeCanvas);
   window.addEventListener("keydown", (event) => {
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "Space", "KeyA", "KeyD", "KeyW"].includes(event.code)) {
       event.preventDefault();
@@ -297,7 +299,11 @@
       { passive: false },
     );
     const settleMobileViewport = () => {
-      window.setTimeout(() => window.scrollTo(0, 0), 80);
+      window.setTimeout(() => {
+        window.scrollTo(0, 0);
+        queueResizeCanvas();
+      }, 80);
+      window.setTimeout(queueResizeCanvas, 260);
     };
     window.addEventListener("orientationchange", settleMobileViewport);
     window.addEventListener("resize", settleMobileViewport);
@@ -1195,8 +1201,16 @@
     return points;
   }
 
+  function queueResizeCanvas() {
+    requestAnimationFrame(resizeCanvas);
+  }
+
   function resizeCanvas() {
     const rect = canvas.getBoundingClientRect();
+    if (rect.width < 10 || rect.height < 10) {
+      window.setTimeout(resizeCanvas, 80);
+      return;
+    }
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(rect.width * dpr);
     canvas.height = Math.round(rect.height * dpr);
