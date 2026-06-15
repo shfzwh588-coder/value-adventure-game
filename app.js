@@ -874,9 +874,9 @@
 
   function drawFinish() {
     const x = finishX + 28;
-    const poleTop = 96;
+    const poleTop = 22;
     const poleBottom = world.ground;
-    const flagTop = 112;
+    const flagTop = 42;
     const flagWave = Math.sin(performance.now() / 420) * 4;
 
     ctx.fillStyle = "rgba(23, 32, 51, 0.18)";
@@ -898,9 +898,9 @@
 
     ctx.beginPath();
     ctx.moveTo(x + 10, flagTop);
-    ctx.quadraticCurveTo(x + 76, flagTop - 16 + flagWave, x + 148, flagTop + 2);
-    ctx.lineTo(x + 130, flagTop + 78 + flagWave);
-    ctx.quadraticCurveTo(x + 72, flagTop + 60 - flagWave, x + 10, flagTop + 76);
+    ctx.quadraticCurveTo(x + 88, flagTop - 18 + flagWave, x + 170, flagTop + 2);
+    ctx.lineTo(x + 148, flagTop + 92 + flagWave);
+    ctx.quadraticCurveTo(x + 82, flagTop + 74 - flagWave, x + 10, flagTop + 90);
     ctx.closePath();
     ctx.fillStyle = "#1982c4";
     ctx.fill();
@@ -913,22 +913,22 @@
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
     ctx.moveTo(x + 26, flagTop + 14);
-    ctx.quadraticCurveTo(x + 78, flagTop + 2 + flagWave, x + 130, flagTop + 16);
-    ctx.lineTo(x + 126, flagTop + 28);
-    ctx.quadraticCurveTo(x + 78, flagTop + 16 + flagWave, x + 26, flagTop + 28);
+    ctx.quadraticCurveTo(x + 88, flagTop + 2 + flagWave, x + 148, flagTop + 17);
+    ctx.lineTo(x + 143, flagTop + 31);
+    ctx.quadraticCurveTo(x + 88, flagTop + 18 + flagWave, x + 26, flagTop + 30);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
 
-    ctx.font = "900 24px sans-serif";
+    ctx.font = "900 27px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.lineWidth = 5;
     ctx.strokeStyle = "#172033";
-    ctx.strokeText("启航", x + 75, flagTop + 42);
+    ctx.strokeText("启航", x + 86, flagTop + 48);
     ctx.fillStyle = "#ffffff";
-    ctx.fillText("启航", x + 75, flagTop + 42);
-    drawFlagStreamers(x + 18, flagTop + 94);
+    ctx.fillText("启航", x + 86, flagTop + 48);
+    drawFlagStreamers(x + 18, flagTop + 108);
   }
 
   function drawPlayer() {
