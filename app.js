@@ -242,6 +242,7 @@
     const direction = button.dataset.hold;
     const press = (event) => {
       event.preventDefault();
+      button.setPointerCapture?.(event.pointerId);
       state.keys[direction] = true;
     };
     const release = () => {
@@ -253,10 +254,28 @@
     button.addEventListener("pointerleave", release);
   });
 
-  document.querySelector("[data-tap='jump']").addEventListener("pointerdown", (event) => {
+  const jumpButton = document.querySelector("[data-tap='jump']");
+  jumpButton.addEventListener("pointerdown", (event) => {
     event.preventDefault();
+    jumpButton.setPointerCapture?.(event.pointerId);
     queueJump();
   });
+
+  if (window.matchMedia("(pointer: coarse)").matches) {
+    window.addEventListener(
+      "touchmove",
+      (event) => {
+        event.preventDefault();
+      },
+      { passive: false },
+    );
+    const settleMobileViewport = () => {
+      window.setTimeout(() => window.scrollTo(0, 0), 80);
+    };
+    window.addEventListener("orientationchange", settleMobileViewport);
+    window.addEventListener("resize", settleMobileViewport);
+    settleMobileViewport();
+  }
 
   function createPlayer() {
     return {
