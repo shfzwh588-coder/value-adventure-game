@@ -1350,7 +1350,7 @@
   }
 
   function resizeCanvas() {
-    const rect = canvas.getBoundingClientRect();
+    const rect = getCanvasLayoutSize();
     if (rect.width < 10 || rect.height < 10) {
       window.setTimeout(resizeCanvas, 80);
       return;
@@ -1366,6 +1366,17 @@
     render.offsetY = (canvas.height - render.height) / 2;
     ctx.setTransform(scale, 0, 0, scale, render.offsetX, render.offsetY);
     draw();
+  }
+
+  function getCanvasLayoutSize() {
+    if (document.body.classList.contains("is-forced-landscape")) {
+      return {
+        width: canvas.clientWidth || canvas.offsetWidth || 0,
+        height: canvas.clientHeight || canvas.offsetHeight || 0,
+      };
+    }
+    const rect = canvas.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
   }
 
   function loadBest() {
