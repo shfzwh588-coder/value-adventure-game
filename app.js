@@ -30,7 +30,7 @@
       name: "客户第一",
       short: "客",
       color: "#1665d8",
-      image: "assets/optimized/value-badges/客户第一.png",
+      image: "assets/optimized/value-badges/客户第一.webp",
       x: 620,
       y: 308,
       text: "把真实需求放在前面",
@@ -40,7 +40,7 @@
       name: "团队协作",
       short: "协",
       color: "#18a99a",
-      image: "assets/optimized/value-badges/团队协作.png",
+      image: "assets/optimized/value-badges/团队协作.webp",
       x: 3000,
       y: 268,
       text: "彼此补位一起抵达",
@@ -50,7 +50,7 @@
       name: "拼搏进取",
       short: "搏",
       color: "#f0643c",
-      image: "assets/optimized/value-badges/拼搏进取.png",
+      image: "assets/optimized/value-badges/拼搏进取.webp",
       x: 5900,
       y: 250,
       text: "关键时刻再向前一步",
@@ -60,7 +60,7 @@
       name: "持续学习",
       short: "学",
       color: "#24a76d",
-      image: "assets/optimized/value-badges/持续学习.png",
+      image: "assets/optimized/value-badges/持续学习.webp",
       x: 9100,
       y: 250,
       text: "每天升级一点点",
@@ -70,7 +70,7 @@
       name: "创新创业",
       short: "创",
       color: "#6f4ce6",
-      image: "assets/optimized/value-badges/创新创业.png",
+      image: "assets/optimized/value-badges/创新创业.webp",
       x: 12280,
       y: 205,
       text: "敢想敢试创造新解法",
@@ -88,7 +88,7 @@
   );
   const playerImage = new Image();
   playerImage.decoding = "async";
-  playerImage.src = "assets/optimized/opossum-q-sprite.png";
+  playerImage.src = "assets/optimized/opossum-q-sprite.webp";
   playerImage.addEventListener("load", draw);
   const requiredAssetImages = [...badgeImages.values(), playerImage];
   const assetState = {
