@@ -874,15 +874,61 @@
 
   function drawFinish() {
     const x = finishX + 28;
+    const poleTop = 96;
+    const poleBottom = world.ground;
+    const flagTop = 112;
+    const flagWave = Math.sin(performance.now() / 420) * 4;
+
+    ctx.fillStyle = "rgba(23, 32, 51, 0.18)";
+    ctx.beginPath();
+    ctx.ellipse(x + 10, poleBottom + 4, 34, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.fillStyle = "#172033";
-    ctx.fillRect(x, 220, 8, 242);
-    roundRect(x + 8, 234, 96, 56, 6, "#2ec4b6", "#172033", 3);
-    ctx.fillStyle = "#172033";
-    ctx.font = "900 22px sans-serif";
+    ctx.fillRect(x, poleTop, 10, poleBottom - poleTop);
+    roundRect(x - 14, poleBottom - 14, 48, 20, 8, "#f6fbff", "#172033", 3);
+
+    ctx.fillStyle = "#ffca3a";
+    ctx.strokeStyle = "#172033";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(x + 5, poleTop - 7, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 10, flagTop);
+    ctx.quadraticCurveTo(x + 76, flagTop - 16 + flagWave, x + 148, flagTop + 2);
+    ctx.lineTo(x + 130, flagTop + 78 + flagWave);
+    ctx.quadraticCurveTo(x + 72, flagTop + 60 - flagWave, x + 10, flagTop + 76);
+    ctx.closePath();
+    ctx.fillStyle = "#1982c4";
+    ctx.fill();
+    ctx.strokeStyle = "#172033";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.globalAlpha = 0.34;
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.moveTo(x + 26, flagTop + 14);
+    ctx.quadraticCurveTo(x + 78, flagTop + 2 + flagWave, x + 130, flagTop + 16);
+    ctx.lineTo(x + 126, flagTop + 28);
+    ctx.quadraticCurveTo(x + 78, flagTop + 16 + flagWave, x + 26, flagTop + 28);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    ctx.font = "900 24px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("启航", x + 56, 262);
-    drawFlagStreamers(x + 8, 302);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = "#172033";
+    ctx.strokeText("启航", x + 75, flagTop + 42);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("启航", x + 75, flagTop + 42);
+    drawFlagStreamers(x + 18, flagTop + 94);
   }
 
   function drawPlayer() {
