@@ -204,17 +204,23 @@
     player: createPlayer(),
   };
 
+  refreshAppHeight();
+  window.addEventListener("resize", refreshAppHeight);
+  window.addEventListener("orientationchange", refreshAppHeight);
+  window.visualViewport?.addEventListener("resize", refreshAppHeight);
+
   buildBadgeUi();
   resetRun();
   resizeCanvas();
   renderOverlayBadges();
   draw();
+  syncOverlayState();
 
   startButton.addEventListener("click", () => startFreshRun());
 
   function startFreshRun(options = {}) {
     if (options.reset || state.complete) resetRun();
-    overlay.classList.remove("is-visible");
+    setOverlayVisible(false);
     state.lastTime = performance.now();
     if (!state.running) {
       state.running = true;
@@ -292,9 +298,21 @@
     };
     window.addEventListener("orientationchange", settleMobileViewport);
     window.addEventListener("resize", settleMobileViewport);
-    window.visualViewport?.addEventListener("resize", settleMobileViewport);
     window.addEventListener("contextmenu", (event) => event.preventDefault());
     settleMobileViewport();
+  }
+
+  function refreshAppHeight() {
+    document.documentElement.style.setProperty("--app-height", `${window.innerHeight}px`);
+  }
+
+  function setOverlayVisible(visible) {
+    overlay.classList.toggle("is-visible", visible);
+    document.body.classList.toggle("has-overlay", visible);
+  }
+
+  function syncOverlayState() {
+    document.body.classList.toggle("has-overlay", overlay.classList.contains("is-visible"));
   }
 
   function createPlayer() {
@@ -655,7 +673,7 @@
       "客户第一、团队协作、拼搏进取、持续学习、创新创业，是我们成功的准则。愿你把这五枚徽章带进今后的工作现场，让每一次选择都更清楚、更坚定。";
     renderCompletionContent(current, isNewBest);
     startButton.textContent = "再玩一次";
-    overlay.classList.add("is-visible");
+    setOverlayVisible(true);
   }
 
   function draw() {

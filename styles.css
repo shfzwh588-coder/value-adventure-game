@@ -649,12 +649,14 @@ canvas {
   html,
   body {
     width: 100%;
-    height: 100%;
+    height: var(--app-height, 100dvh);
+    overflow: hidden;
     overscroll-behavior: none;
   }
 
   body {
-    overflow: hidden;
+    position: fixed;
+    inset: 0;
     touch-action: none;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -667,19 +669,29 @@ canvas {
   }
 
   .game-shell {
-    height: 100svh;
-    height: 100dvh;
+    grid-template-rows: auto minmax(0, 1fr);
+    width: 100vw;
+    height: var(--app-height, 100dvh);
+    min-height: 0;
   }
 
   .overlay {
-    padding: 8px;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    padding:
+      max(8px, env(safe-area-inset-top))
+      max(8px, env(safe-area-inset-right))
+      max(8px, env(safe-area-inset-bottom))
+      max(8px, env(safe-area-inset-left));
   }
 
   .modal {
-    width: min(620px, 100%);
-    max-height: calc(100% - 10px);
+    width: min(720px, calc(100vw - 20px));
+    max-height: calc(var(--app-height, 100dvh) - 18px);
     padding: clamp(12px, 3vh, 18px);
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .eyebrow {
@@ -688,13 +700,14 @@ canvas {
   }
 
   .modal h1 {
-    font-size: clamp(1.54rem, 5.6vw, 2.35rem);
+    font-size: clamp(1.5rem, 5.2vh, 2.05rem);
+    line-height: 1.04;
   }
 
   .modal p:not(.eyebrow) {
     margin-top: 8px;
-    font-size: 0.9rem;
-    line-height: 1.45;
+    font-size: 0.86rem;
+    line-height: 1.42;
   }
 
   .overlay-badges {
@@ -703,25 +716,25 @@ canvas {
   }
 
   .overlay-badges span {
-    min-height: 64px;
+    min-height: 58px;
   }
 
   .overlay-badges b {
-    width: clamp(48px, 10.5vh, 68px);
-    height: clamp(48px, 10.5vh, 68px);
+    width: clamp(44px, 11vh, 64px);
+    height: clamp(44px, 11vh, 64px);
   }
 
   .overlay.is-complete .modal {
-    width: min(760px, 100%);
+    width: min(780px, calc(100vw - 20px));
   }
 
   .overlay.is-complete .overlay-badges span {
-    min-height: 70px;
+    min-height: 62px;
   }
 
   .overlay.is-complete .overlay-badges b {
-    width: clamp(52px, 11vh, 74px);
-    height: clamp(52px, 11vh, 74px);
+    width: clamp(48px, 11vh, 68px);
+    height: clamp(48px, 11vh, 68px);
   }
 
   .achievement-card {
@@ -730,9 +743,9 @@ canvas {
   }
 
   .achievement-card__seal {
-    width: 46px;
-    height: 46px;
-    font-size: 1.35rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.28rem;
   }
 
   .achievement-card h2 {
@@ -762,29 +775,53 @@ canvas {
   }
 
   .primary-button {
-    min-height: 44px;
+    min-width: 138px;
+    min-height: 40px;
+    padding: 0 14px;
+  }
+
+  .touch-controls {
+    position: fixed;
+    z-index: 12;
+    left: 0;
+    right: 0;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    pointer-events: none;
+  }
+
+  .touch-controls button {
+    pointer-events: auto;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+  }
+
+  body.has-overlay .touch-controls {
+    display: none;
   }
 }
 
 @media (pointer: coarse) and (orientation: landscape) {
   .game-shell {
-    width: 100vw;
-    height: 100dvh;
     padding:
-      max(6px, env(safe-area-inset-top))
-      max(12px, env(safe-area-inset-right))
-      max(8px, env(safe-area-inset-bottom))
-      max(12px, env(safe-area-inset-left));
-    gap: 6px;
+      max(4px, env(safe-area-inset-top))
+      max(8px, env(safe-area-inset-right))
+      max(6px, env(safe-area-inset-bottom))
+      max(8px, env(safe-area-inset-left));
+    gap: 5px;
   }
 
   .hud {
-    grid-template-columns: minmax(150px, 0.85fr) minmax(0, 1.15fr) auto;
-    gap: 8px;
+    grid-template-columns: minmax(132px, 0.85fr) minmax(0, 1.15fr) auto;
+    gap: 7px;
+  }
+
+  .brand {
+    min-width: 0;
   }
 
   .brand strong {
-    font-size: clamp(0.82rem, 2.5vw, 1.02rem);
+    font-size: clamp(0.86rem, 3.3vh, 1.06rem);
   }
 
   .brand span {
@@ -796,14 +833,14 @@ canvas {
   }
 
   .badge-chip {
-    min-height: 30px;
+    min-height: 28px;
     padding: 2px;
     box-shadow: 2px 2px 0 var(--line);
   }
 
   .badge-chip b {
-    width: clamp(30px, 7.3vh, 42px);
-    height: clamp(30px, 7.3vh, 42px);
+    width: clamp(28px, 8.5vh, 42px);
+    height: clamp(28px, 8.5vh, 42px);
   }
 
   .meters {
@@ -811,35 +848,38 @@ canvas {
   }
 
   .meter {
-    min-width: 58px;
-    min-height: 30px;
+    min-width: 56px;
+    min-height: 28px;
     padding: 0 8px;
     box-shadow: 2px 2px 0 var(--line);
-    font-size: 0.86rem;
+    font-size: clamp(0.78rem, 3vh, 0.9rem);
   }
 
   #heartMeter {
-    min-width: 72px;
+    min-width: 68px;
   }
 
   .stage-frame {
     min-height: 0;
+    border-width: 2px;
   }
 
   .touch-controls {
     display: grid;
-    grid-template-columns: clamp(60px, 12vw, 82px) clamp(60px, 12vw, 82px) minmax(72px, 1fr) clamp(72px, 14vw, 96px);
+    grid-template-columns:
+      clamp(58px, 13vh, 78px)
+      clamp(58px, 13vh, 78px)
+      minmax(52px, 1fr)
+      clamp(72px, 16vh, 96px);
     align-items: end;
     gap: clamp(8px, 2vw, 14px);
-    padding: 0 max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left));
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
   }
 
   .touch-controls button {
     width: 100%;
-    height: clamp(52px, 15vh, 74px);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.94);
-    font-size: clamp(1.28rem, 5vw, 2rem);
+    height: clamp(48px, 12vh, 68px);
+    font-size: clamp(1.2rem, 5vh, 1.8rem);
   }
 
   .touch-controls [data-hold="left"] {
@@ -852,8 +892,8 @@ canvas {
 
   .touch-controls [data-tap="jump"] {
     grid-column: 4;
-    height: clamp(62px, 18vh, 88px);
-    background: #2ec4b6;
+    height: clamp(56px, 14vh, 78px);
+    background: rgba(46, 196, 182, 0.92);
   }
 
   .orientation-hint {
@@ -863,134 +903,48 @@ canvas {
 
 @media (pointer: coarse) and (orientation: portrait) {
   .game-shell {
-    width: 100vw;
-    height: 100dvh;
-    padding:
-      max(58px, env(safe-area-inset-top))
-      max(8px, env(safe-area-inset-right))
-      max(8px, env(safe-area-inset-bottom))
-      max(8px, env(safe-area-inset-left));
-    gap: 6px;
-  }
-
-  .hud {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  .brand,
-  .badge-rack,
-  .meters {
-    justify-content: center;
-  }
-
-  .brand {
-    min-width: 0;
-  }
-
-  .brand strong {
-    font-size: clamp(0.96rem, 4.2vw, 1.18rem);
-  }
-
-  .brand span {
     display: none;
-  }
-
-  .badge-rack {
-    gap: 4px;
-  }
-
-  .badge-chip {
-    min-height: 30px;
-    padding: 2px;
-    box-shadow: 2px 2px 0 var(--line);
-  }
-
-  .badge-chip b {
-    width: clamp(31px, 9vw, 42px);
-    height: clamp(31px, 9vw, 42px);
-  }
-
-  .meters {
-    gap: 5px;
-  }
-
-  .meter {
-    min-width: 56px;
-    min-height: 30px;
-    padding: 0 8px;
-    box-shadow: 2px 2px 0 var(--line);
-    font-size: 0.86rem;
-  }
-
-  #heartMeter {
-    min-width: 70px;
-  }
-
-  .stage-frame {
-    min-height: 0;
-  }
-
-  .touch-controls {
-    display: grid;
-    grid-template-columns: repeat(3, clamp(58px, 19vw, 76px));
-    justify-content: center;
-    gap: clamp(10px, 4vw, 16px);
-    padding: 0 max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left));
-  }
-
-  .touch-controls button {
-    width: 100%;
-    height: clamp(52px, 9vh, 68px);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.94);
-    font-size: clamp(1.25rem, 7vw, 1.85rem);
-  }
-
-  .touch-controls [data-hold="left"] {
-    grid-column: 1;
-  }
-
-  .touch-controls [data-tap="jump"] {
-    grid-column: 2;
-    background: #2ec4b6;
-  }
-
-  .touch-controls [data-hold="right"] {
-    grid-column: 3;
   }
 
   .orientation-hint {
     position: fixed;
-    z-index: 10;
-    left: 50%;
-    top: max(8px, env(safe-area-inset-top));
-    display: block;
-    width: min(360px, calc(100vw - 24px));
-    transform: translateX(-50%);
-    pointer-events: none;
+    z-index: 40;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding:
+      max(22px, env(safe-area-inset-top))
+      max(18px, env(safe-area-inset-right))
+      max(22px, env(safe-area-inset-bottom))
+      max(18px, env(safe-area-inset-left));
+    background:
+      linear-gradient(90deg, rgba(23, 32, 51, 0.05) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(23, 32, 51, 0.05) 1px, transparent 1px),
+      linear-gradient(180deg, #ffe8b8 0%, #d8f3ff 52%, #dff8ee 100%);
+    background-size: 30px 30px, 30px 30px, auto;
   }
 
   .orientation-hint > div {
     display: grid;
-    gap: 4px;
+    gap: 8px;
+    width: min(360px, calc(100vw - 36px));
     border: 3px solid var(--line);
     border-radius: var(--radius);
-    padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.94);
+    padding: 22px 20px;
+    background: rgba(255, 255, 255, 0.96);
     box-shadow: var(--hard-shadow);
     text-align: center;
   }
 
   .orientation-hint strong {
-    font-size: 1rem;
+    font-size: 1.36rem;
     line-height: 1.15;
   }
 
   .orientation-hint span {
     color: var(--muted);
-    font-size: 0.78rem;
+    font-size: 0.92rem;
     font-weight: 850;
-    line-height: 1.35;
+    line-height: 1.45;
   }
 }
