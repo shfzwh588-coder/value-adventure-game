@@ -238,6 +238,8 @@
     if (event.code === "ArrowUp" || event.code === "KeyW" || event.code === "Space") state.keys.jump = false;
   });
 
+  const supportsPointerEvents = "PointerEvent" in window;
+
   document.querySelectorAll("[data-hold]").forEach((button) => {
     const direction = button.dataset.hold;
     const press = (event) => {
@@ -245,21 +247,37 @@
       button.setPointerCapture?.(event.pointerId);
       state.keys[direction] = true;
     };
-    const release = () => {
+    const release = (event) => {
+      event?.preventDefault?.();
       state.keys[direction] = false;
     };
-    button.addEventListener("pointerdown", press);
-    button.addEventListener("pointerup", release);
-    button.addEventListener("pointercancel", release);
-    button.addEventListener("pointerleave", release);
+    if (supportsPointerEvents) {
+      button.addEventListener("pointerdown", press);
+      button.addEventListener("pointerup", release);
+      button.addEventListener("pointercancel", release);
+      button.addEventListener("pointerleave", release);
+    } else {
+      button.addEventListener("touchstart", press, { passive: false });
+      button.addEventListener("touchend", release, { passive: false });
+      button.addEventListener("touchcancel", release, { passive: false });
+      button.addEventListener("mousedown", press);
+      button.addEventListener("mouseup", release);
+      button.addEventListener("mouseleave", release);
+    }
   });
 
   const jumpButton = document.querySelector("[data-tap='jump']");
-  jumpButton.addEventListener("pointerdown", (event) => {
+  const jump = (event) => {
     event.preventDefault();
     jumpButton.setPointerCapture?.(event.pointerId);
     queueJump();
-  });
+  };
+  if (supportsPointerEvents) {
+    jumpButton.addEventListener("pointerdown", jump);
+  } else {
+    jumpButton.addEventListener("touchstart", jump, { passive: false });
+    jumpButton.addEventListener("mousedown", jump);
+  }
 
   if (window.matchMedia("(pointer: coarse)").matches) {
     window.addEventListener(
@@ -274,6 +292,8 @@
     };
     window.addEventListener("orientationchange", settleMobileViewport);
     window.addEventListener("resize", settleMobileViewport);
+    window.visualViewport?.addEventListener("resize", settleMobileViewport);
+    window.addEventListener("contextmenu", (event) => event.preventDefault());
     settleMobileViewport();
   }
 

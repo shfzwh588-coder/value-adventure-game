@@ -654,8 +654,6 @@ canvas {
   }
 
   body {
-    position: fixed;
-    inset: 0;
     overflow: hidden;
     touch-action: none;
     user-select: none;
@@ -666,6 +664,105 @@ canvas {
   canvas {
     touch-action: none;
     user-select: none;
+  }
+
+  .game-shell {
+    height: 100svh;
+    height: 100dvh;
+  }
+
+  .overlay {
+    padding: 8px;
+  }
+
+  .modal {
+    width: min(620px, 100%);
+    max-height: calc(100% - 10px);
+    padding: clamp(12px, 3vh, 18px);
+    overflow: auto;
+  }
+
+  .eyebrow {
+    margin-bottom: 6px;
+    font-size: 0.68rem;
+  }
+
+  .modal h1 {
+    font-size: clamp(1.54rem, 5.6vw, 2.35rem);
+  }
+
+  .modal p:not(.eyebrow) {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .overlay-badges {
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .overlay-badges span {
+    min-height: 64px;
+  }
+
+  .overlay-badges b {
+    width: clamp(48px, 10.5vh, 68px);
+    height: clamp(48px, 10.5vh, 68px);
+  }
+
+  .overlay.is-complete .modal {
+    width: min(760px, 100%);
+  }
+
+  .overlay.is-complete .overlay-badges span {
+    min-height: 70px;
+  }
+
+  .overlay.is-complete .overlay-badges b {
+    width: clamp(52px, 11vh, 74px);
+    height: clamp(52px, 11vh, 74px);
+  }
+
+  .achievement-card {
+    gap: 10px;
+    padding-top: 10px;
+  }
+
+  .achievement-card__seal {
+    width: 46px;
+    height: 46px;
+    font-size: 1.35rem;
+  }
+
+  .achievement-card h2 {
+    font-size: 1.05rem;
+  }
+
+  .completion-stats {
+    gap: 6px;
+  }
+
+  .completion-stats span {
+    min-height: 54px;
+    padding: 7px;
+  }
+
+  .completion-stats b {
+    font-size: 0.94rem;
+  }
+
+  .completion-stats small,
+  .value-actions li {
+    font-size: 0.72rem;
+  }
+
+  .modal__actions {
+    margin-top: 10px;
+  }
+
+  .primary-button {
+    min-height: 44px;
   }
 }
 
@@ -765,44 +862,135 @@ canvas {
 }
 
 @media (pointer: coarse) and (orientation: portrait) {
-  .touch-controls {
+  .game-shell {
+    width: 100vw;
+    height: 100dvh;
+    padding:
+      max(58px, env(safe-area-inset-top))
+      max(8px, env(safe-area-inset-right))
+      max(8px, env(safe-area-inset-bottom))
+      max(8px, env(safe-area-inset-left));
+    gap: 6px;
+  }
+
+  .hud {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .brand,
+  .badge-rack,
+  .meters {
+    justify-content: center;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand strong {
+    font-size: clamp(0.96rem, 4.2vw, 1.18rem);
+  }
+
+  .brand span {
     display: none;
+  }
+
+  .badge-rack {
+    gap: 4px;
+  }
+
+  .badge-chip {
+    min-height: 30px;
+    padding: 2px;
+    box-shadow: 2px 2px 0 var(--line);
+  }
+
+  .badge-chip b {
+    width: clamp(31px, 9vw, 42px);
+    height: clamp(31px, 9vw, 42px);
+  }
+
+  .meters {
+    gap: 5px;
+  }
+
+  .meter {
+    min-width: 56px;
+    min-height: 30px;
+    padding: 0 8px;
+    box-shadow: 2px 2px 0 var(--line);
+    font-size: 0.86rem;
+  }
+
+  #heartMeter {
+    min-width: 70px;
+  }
+
+  .stage-frame {
+    min-height: 0;
+  }
+
+  .touch-controls {
+    display: grid;
+    grid-template-columns: repeat(3, clamp(58px, 19vw, 76px));
+    justify-content: center;
+    gap: clamp(10px, 4vw, 16px);
+    padding: 0 max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left));
+  }
+
+  .touch-controls button {
+    width: 100%;
+    height: clamp(52px, 9vh, 68px);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.94);
+    font-size: clamp(1.25rem, 7vw, 1.85rem);
+  }
+
+  .touch-controls [data-hold="left"] {
+    grid-column: 1;
+  }
+
+  .touch-controls [data-tap="jump"] {
+    grid-column: 2;
+    background: #2ec4b6;
+  }
+
+  .touch-controls [data-hold="right"] {
+    grid-column: 3;
   }
 
   .orientation-hint {
     position: fixed;
-    inset: 0;
     z-index: 10;
-    display: grid;
-    place-items: center;
-    padding: 24px;
-    background:
-      linear-gradient(90deg, rgba(23, 32, 51, 0.06) 1px, transparent 1px),
-      linear-gradient(0deg, rgba(23, 32, 51, 0.06) 1px, transparent 1px),
-      linear-gradient(180deg, #ffe8b8 0%, #d8f3ff 48%, #dff8ee 100%);
-    background-size: 30px 30px, 30px 30px, auto;
+    left: 50%;
+    top: max(8px, env(safe-area-inset-top));
+    display: block;
+    width: min(360px, calc(100vw - 24px));
+    transform: translateX(-50%);
+    pointer-events: none;
   }
 
   .orientation-hint > div {
     display: grid;
-    gap: 10px;
-    width: min(320px, 100%);
+    gap: 4px;
     border: 3px solid var(--line);
     border-radius: var(--radius);
-    padding: 24px 20px;
+    padding: 10px 14px;
     background: rgba(255, 255, 255, 0.94);
     box-shadow: var(--hard-shadow);
     text-align: center;
   }
 
   .orientation-hint strong {
-    font-size: 1.6rem;
+    font-size: 1rem;
     line-height: 1.15;
   }
 
   .orientation-hint span {
     color: var(--muted);
+    font-size: 0.78rem;
     font-weight: 850;
-    line-height: 1.45;
+    line-height: 1.35;
   }
 }
