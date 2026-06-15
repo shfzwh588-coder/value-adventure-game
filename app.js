@@ -89,6 +89,14 @@
   playerImage.decoding = "async";
   playerImage.src = "assets/optimized/opossum-q-sprite.png";
   playerImage.addEventListener("load", draw);
+  const requiredAssetImages = [...badgeImages.values(), playerImage];
+  const assetState = {
+    ready: false,
+    failed: false,
+    loaded: 0,
+    total: requiredAssetImages.length,
+  };
+  const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 
   const platforms = [
     { x: 0, y: world.ground, w: 820, h: 90 },
@@ -208,20 +216,35 @@
   };
 
   refreshAppHeight();
-  window.addEventListener("resize", refreshAppHeight);
-  window.addEventListener("orientationchange", refreshAppHeight);
-  window.visualViewport?.addEventListener("resize", refreshAppHeight);
+  syncMobileOrientation();
+  window.addEventListener("resize", handleViewportChange);
+  window.addEventListener("orientationchange", handleViewportChange);
+  window.visualViewport?.addEventListener("resize", handleViewportChange);
+  window.screen?.orientation?.addEventListener?.("change", handleViewportChange);
+  coarsePointerQuery.addEventListener?.("change", handleViewportChange);
 
   buildBadgeUi();
   resetRun();
+  setAssetLoadingState(0);
   resizeCanvas();
   renderOverlayBadges();
   draw();
   syncOverlayState();
+  prepareAssets();
 
-  startButton.addEventListener("click", () => startFreshRun());
+  startButton.addEventListener("click", () => {
+    if (assetState.failed) {
+      window.location.reload();
+      return;
+    }
+    startFreshRun();
+  });
 
   function startFreshRun(options = {}) {
+    if (!assetState.ready) {
+      showToast(assetState.failed ? "素材加载失败，请刷新重试" : "素材加载中，请稍等");
+      return;
+    }
     if (options.reset || state.complete) resetRun();
     setOverlayVisible(false);
     state.lastTime = performance.now();
@@ -290,7 +313,7 @@
     jumpButton.addEventListener("mousedown", jump);
   }
 
-  if (window.matchMedia("(pointer: coarse)").matches) {
+  if (isTouchLikeDevice()) {
     window.addEventListener(
       "touchmove",
       (event) => {
@@ -299,11 +322,13 @@
       { passive: false },
     );
     const settleMobileViewport = () => {
-      window.setTimeout(() => {
+      const settle = () => {
         window.scrollTo(0, 0);
-        queueResizeCanvas();
-      }, 80);
-      window.setTimeout(queueResizeCanvas, 260);
+        handleViewportChange();
+      };
+      window.setTimeout(settle, 80);
+      window.setTimeout(settle, 260);
+      window.setTimeout(settle, 520);
     };
     window.addEventListener("orientationchange", settleMobileViewport);
     window.addEventListener("resize", settleMobileViewport);
@@ -314,8 +339,97 @@
     settleMobileViewport();
   }
 
+  function handleViewportChange() {
+    refreshAppHeight();
+    syncMobileOrientation();
+    queueResizeCanvas();
+  }
+
   function refreshAppHeight() {
-    document.documentElement.style.setProperty("--app-height", `${window.innerHeight}px`);
+    const { height } = getViewportSize();
+    document.documentElement.style.setProperty("--app-height", `${Math.max(1, height)}px`);
+  }
+
+  function getViewportSize() {
+    const viewport = window.visualViewport;
+    return {
+      width: viewport?.width || window.innerWidth || document.documentElement.clientWidth || 0,
+      height: viewport?.height || window.innerHeight || document.documentElement.clientHeight || 0,
+    };
+  }
+
+  function isTouchLikeDevice() {
+    return coarsePointerQuery.matches || navigator.maxTouchPoints > 0;
+  }
+
+  function syncMobileOrientation() {
+    const { width, height } = getViewportSize();
+    const isTouch = isTouchLikeDevice();
+    const hasSize = width > 0 && height > 0;
+    document.body.classList.toggle("is-portrait-phone", isTouch && hasSize && height >= width);
+    document.body.classList.toggle("is-landscape-phone", isTouch && hasSize && width > height);
+  }
+
+  function prepareAssets() {
+    let loaded = 0;
+    Promise.all(
+      requiredAssetImages.map((image) =>
+        waitForImage(image).then(() => {
+          loaded += 1;
+          setAssetLoadingState(loaded);
+        }),
+      ),
+    )
+      .then(() => {
+        assetState.ready = true;
+        assetState.failed = false;
+        document.body.classList.remove("is-loading-assets");
+        startButton.disabled = false;
+        if (!state.complete) startButton.textContent = "开始冒险";
+        draw();
+      })
+      .catch(() => {
+        assetState.failed = true;
+        document.body.classList.remove("is-loading-assets");
+        startButton.disabled = false;
+        startButton.textContent = "刷新重试";
+        showToast("素材加载失败，请刷新重试");
+      });
+  }
+
+  function setAssetLoadingState(loaded) {
+    if (assetState.ready) return;
+    assetState.loaded = loaded;
+    document.body.classList.add("is-loading-assets");
+    startButton.disabled = true;
+    startButton.textContent = `素材加载中 ${loaded}/${assetState.total}`;
+  }
+
+  function waitForImage(image) {
+    if (image.complete) {
+      return image.naturalWidth ? decodeImage(image) : Promise.reject(new Error("Image failed"));
+    }
+    return new Promise((resolve, reject) => {
+      const onLoad = () => {
+        cleanup();
+        resolve();
+      };
+      const onError = () => {
+        cleanup();
+        reject(new Error("Image failed"));
+      };
+      const cleanup = () => {
+        image.removeEventListener("load", onLoad);
+        image.removeEventListener("error", onError);
+      };
+      image.addEventListener("load", onLoad);
+      image.addEventListener("error", onError);
+    }).then(() => decodeImage(image));
+  }
+
+  function decodeImage(image) {
+    if (!image.decode) return Promise.resolve();
+    return image.decode().catch(() => undefined);
   }
 
   function setOverlayVisible(visible) {

@@ -511,10 +511,22 @@ canvas {
   background: var(--teal);
 }
 
+.primary-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+  box-shadow: 4px 4px 0 var(--line);
+}
+
 .primary-button:hover,
 .touch-controls button:hover {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 var(--line);
+}
+
+.primary-button:disabled:hover {
+  transform: none;
+  box-shadow: 4px 4px 0 var(--line);
 }
 
 .touch-controls {
@@ -836,9 +848,13 @@ canvas {
   body.has-overlay .touch-controls {
     display: none;
   }
+
+  body.is-loading-assets .touch-controls {
+    display: none;
+  }
 }
 
-@media (pointer: coarse) and (orientation: landscape) {
+@media (pointer: coarse) {
   .game-shell {
     padding:
       max(4px, env(safe-area-inset-top))
@@ -1073,50 +1089,48 @@ canvas {
   }
 }
 
-@media (pointer: coarse) and (orientation: portrait) {
-  .game-shell {
-    display: none;
-  }
+body.is-portrait-phone .game-shell {
+  display: none;
+}
 
-  .orientation-hint {
-    position: fixed;
-    z-index: 40;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    padding:
-      max(22px, env(safe-area-inset-top))
-      max(18px, env(safe-area-inset-right))
-      max(22px, env(safe-area-inset-bottom))
-      max(18px, env(safe-area-inset-left));
-    background:
-      linear-gradient(90deg, rgba(23, 32, 51, 0.05) 1px, transparent 1px),
-      linear-gradient(0deg, rgba(23, 32, 51, 0.05) 1px, transparent 1px),
-      linear-gradient(180deg, #ffe8b8 0%, #d8f3ff 52%, #dff8ee 100%);
-    background-size: 30px 30px, 30px 30px, auto;
-  }
+body.is-portrait-phone .orientation-hint {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding:
+    max(22px, env(safe-area-inset-top))
+    max(18px, env(safe-area-inset-right))
+    max(22px, env(safe-area-inset-bottom))
+    max(18px, env(safe-area-inset-left));
+  background:
+    linear-gradient(90deg, rgba(23, 32, 51, 0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(23, 32, 51, 0.05) 1px, transparent 1px),
+    linear-gradient(180deg, #ffe8b8 0%, #d8f3ff 52%, #dff8ee 100%);
+  background-size: 30px 30px, 30px 30px, auto;
+}
 
-  .orientation-hint > div {
-    display: grid;
-    gap: 8px;
-    width: min(360px, calc(100vw - 36px));
-    border: 3px solid var(--line);
-    border-radius: var(--radius);
-    padding: 22px 20px;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: var(--hard-shadow);
-    text-align: center;
-  }
+body.is-portrait-phone .orientation-hint > div {
+  display: grid;
+  gap: 8px;
+  width: min(360px, calc(100vw - 36px));
+  border: 3px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--hard-shadow);
+  text-align: center;
+}
 
-  .orientation-hint strong {
-    font-size: 1.36rem;
-    line-height: 1.15;
-  }
+body.is-portrait-phone .orientation-hint strong {
+  font-size: 1.36rem;
+  line-height: 1.15;
+}
 
-  .orientation-hint span {
-    color: var(--muted);
-    font-size: 0.92rem;
-    font-weight: 850;
-    line-height: 1.45;
-  }
+body.is-portrait-phone .orientation-hint span {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 850;
+  line-height: 1.45;
 }
