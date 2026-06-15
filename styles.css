@@ -1114,6 +1114,144 @@ body.is-forced-landscape .orientation-hint {
   display: none;
 }
 
+body.is-forced-landscape .overlay {
+  position: absolute;
+  inset: 0;
+  padding: 6px;
+}
+
+body.is-forced-landscape .overlay.is-complete .modal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  grid-template-areas:
+    "title actions"
+    "intro intro"
+    "badges badges"
+    "meaning meaning";
+  align-content: start;
+  gap: 4px 8px;
+  width: calc(100% - 12px);
+  height: calc(100% - 12px);
+  max-height: calc(100% - 12px);
+  padding: 8px 10px;
+  overflow: hidden;
+}
+
+body.is-forced-landscape .overlay.is-complete .eyebrow {
+  display: none;
+}
+
+body.is-forced-landscape .overlay.is-complete .modal h1 {
+  grid-area: title;
+  font-size: clamp(1rem, 4vh, 1.28rem);
+  line-height: 1.08;
+}
+
+body.is-forced-landscape .overlay.is-complete #overlayText {
+  grid-area: intro;
+  margin-top: 0;
+  font-size: clamp(0.58rem, 2.05vh, 0.7rem);
+  line-height: 1.28;
+}
+
+body.is-forced-landscape .overlay.is-complete .overlay-badges {
+  grid-area: badges;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+}
+
+body.is-forced-landscape .overlay.is-complete .overlay-badges span {
+  min-height: 34px;
+}
+
+body.is-forced-landscape .overlay.is-complete .overlay-badges b {
+  width: clamp(32px, 8.2vh, 44px);
+  height: clamp(32px, 8.2vh, 44px);
+}
+
+body.is-forced-landscape .overlay.is-complete .meaning-panel {
+  grid-area: meaning;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 0.82fr);
+  gap: 8px;
+  margin-top: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.is-forced-landscape .overlay.is-complete .achievement-card {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+body.is-forced-landscape .overlay.is-complete .achievement-card__seal {
+  width: 28px;
+  height: 28px;
+  border-width: 2px;
+  box-shadow: 2px 2px 0 var(--line);
+  font-size: 0.95rem;
+}
+
+body.is-forced-landscape .overlay.is-complete .achievement-card__label {
+  margin-bottom: 1px;
+  font-size: 0.55rem;
+}
+
+body.is-forced-landscape .overlay.is-complete .achievement-card h2 {
+  font-size: clamp(0.76rem, 2.45vh, 0.9rem);
+  line-height: 1.1;
+}
+
+body.is-forced-landscape .overlay.is-complete .achievement-card p:not(.achievement-card__label) {
+  margin-top: 3px;
+  font-size: clamp(0.55rem, 1.86vh, 0.64rem);
+  line-height: 1.22;
+}
+
+body.is-forced-landscape .overlay.is-complete .completion-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-self: center;
+  gap: 4px;
+}
+
+body.is-forced-landscape .overlay.is-complete .completion-stats span {
+  min-height: 34px;
+  padding: 3px;
+  box-shadow: 2px 2px 0 var(--line);
+}
+
+body.is-forced-landscape .overlay.is-complete .completion-stats b {
+  font-size: 0.66rem;
+}
+
+body.is-forced-landscape .overlay.is-complete .completion-stats small {
+  font-size: 0.52rem;
+}
+
+body.is-forced-landscape .overlay.is-complete .value-actions {
+  display: none;
+}
+
+body.is-forced-landscape .overlay.is-complete .modal__actions {
+  grid-area: actions;
+  align-self: center;
+  justify-self: end;
+  margin: 0;
+  padding: 0;
+  border-top: 0;
+}
+
+body.is-forced-landscape .overlay.is-complete .primary-button {
+  min-width: 104px;
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: 0.76rem;
+}
+
 body.is-portrait-phone .orientation-hint {
   position: fixed;
   z-index: 40;
