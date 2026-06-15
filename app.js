@@ -12,6 +12,7 @@
   const overlayBadges = document.querySelector("#overlayBadges");
   const overlayMeaning = document.querySelector("#overlayMeaning");
   const startButton = document.querySelector("#startButton");
+  const orientationContinue = document.querySelector("#orientationContinue");
 
   const view = { width: 960, height: 540 };
   const render = { scale: 1, offsetX: 0, offsetY: 0, width: view.width, height: view.height };
@@ -97,6 +98,7 @@
     total: requiredAssetImages.length,
   };
   const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+  let orientationBypass = false;
 
   const platforms = [
     { x: 0, y: world.ground, w: 820, h: 90 },
@@ -222,6 +224,10 @@
   window.visualViewport?.addEventListener("resize", handleViewportChange);
   window.screen?.orientation?.addEventListener?.("change", handleViewportChange);
   coarsePointerQuery.addEventListener?.("change", handleViewportChange);
+  orientationContinue?.addEventListener("click", () => {
+    orientationBypass = true;
+    handleViewportChange();
+  });
 
   buildBadgeUi();
   resetRun();
@@ -336,6 +342,7 @@
     window.addEventListener("selectstart", (event) => event.preventDefault());
     window.addEventListener("dragstart", (event) => event.preventDefault());
     document.addEventListener("selectionchange", () => window.getSelection()?.removeAllRanges());
+    window.setInterval(pollMobileOrientation, 380);
     settleMobileViewport();
   }
 
@@ -366,8 +373,31 @@
     const { width, height } = getViewportSize();
     const isTouch = isTouchLikeDevice();
     const hasSize = width > 0 && height > 0;
-    document.body.classList.toggle("is-portrait-phone", isTouch && hasSize && height >= width);
-    document.body.classList.toggle("is-landscape-phone", isTouch && hasSize && width > height);
+    const isLandscape =
+      orientationBypass || (isTouch && hasSize && (width > height || deviceReportsLandscapeOrientation()));
+    const isPortrait = isTouch && hasSize && !isLandscape && height >= width;
+    const isForcedLandscape = isLandscape && hasSize && height >= width;
+    const wasPortrait = document.body.classList.contains("is-portrait-phone");
+    const wasLandscape = document.body.classList.contains("is-landscape-phone");
+    const wasForcedLandscape = document.body.classList.contains("is-forced-landscape");
+    document.body.classList.toggle("is-portrait-phone", isPortrait);
+    document.body.classList.toggle("is-landscape-phone", isLandscape);
+    document.body.classList.toggle("is-forced-landscape", isForcedLandscape);
+    return wasPortrait !== isPortrait || wasLandscape !== isLandscape || wasForcedLandscape !== isForcedLandscape;
+  }
+
+  function pollMobileOrientation() {
+    refreshAppHeight();
+    if (syncMobileOrientation()) {
+      queueResizeCanvas();
+    }
+  }
+
+  function deviceReportsLandscapeOrientation() {
+    const orientation = window.screen?.orientation;
+    const angle = Number.isFinite(orientation?.angle) ? orientation.angle : Number(window.orientation);
+    const type = String(orientation?.type || "");
+    return Math.abs(angle) === 90 || type.includes("landscape");
   }
 
   function prepareAssets() {
