@@ -799,6 +799,13 @@ canvas {
     margin-top: 10px;
   }
 
+  .overlay.is-complete .modal__actions {
+    position: static;
+    margin-top: 8px;
+    padding-top: 8px;
+    background: transparent;
+  }
+
   .primary-button {
     min-width: 138px;
     min-height: 40px;
@@ -930,6 +937,149 @@ canvas {
     grid-column: 4;
     height: clamp(56px, 14vh, 78px);
     background: rgba(46, 196, 182, 0.92);
+  }
+
+  .overlay.is-complete .modal {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.86fr) minmax(300px, 1.14fr);
+    grid-template-areas:
+      "eyebrow eyebrow"
+      "title title"
+      "intro intro"
+      "badges meaning"
+      "actions actions";
+    align-content: start;
+    gap: 5px 16px;
+    width: min(930px, calc(100vw - 36px));
+    padding: 12px 18px;
+  }
+
+  .overlay.is-complete .eyebrow {
+    grid-area: eyebrow;
+    margin-bottom: 0;
+  }
+
+  .overlay.is-complete .modal h1 {
+    grid-area: title;
+    font-size: clamp(1.36rem, 5vh, 1.82rem);
+  }
+
+  .overlay.is-complete #overlayText {
+    grid-area: intro;
+    margin-top: 0;
+    font-size: clamp(0.78rem, 2.7vh, 0.9rem);
+    line-height: 1.32;
+  }
+
+  .overlay.is-complete .overlay-badges {
+    grid-area: badges;
+    align-self: start;
+    gap: 4px;
+    margin-top: 2px;
+  }
+
+  .overlay.is-complete .overlay-badges span {
+    min-height: 42px;
+  }
+
+  .overlay.is-complete .overlay-badges b {
+    width: clamp(40px, 10vh, 56px);
+    height: clamp(40px, 10vh, 56px);
+  }
+
+  .overlay.is-complete .meaning-panel {
+    grid-area: meaning;
+    gap: 6px;
+    margin-top: 0;
+  }
+
+  .overlay.is-complete .achievement-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .overlay.is-complete .achievement-card__seal {
+    width: 38px;
+    height: 38px;
+    border-width: 2px;
+    box-shadow: 2px 2px 0 var(--line);
+    font-size: 1.12rem;
+  }
+
+  .overlay.is-complete .achievement-card__label {
+    margin-bottom: 2px;
+    font-size: 0.62rem;
+  }
+
+  .overlay.is-complete .achievement-card h2 {
+    font-size: clamp(0.92rem, 3vh, 1.08rem);
+  }
+
+  .overlay.is-complete .achievement-card p:not(.achievement-card__label) {
+    display: -webkit-box;
+    margin-top: 4px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    font-size: clamp(0.72rem, 2.5vh, 0.82rem);
+    line-height: 1.32;
+  }
+
+  .overlay.is-complete .completion-stats {
+    gap: 5px;
+  }
+
+  .overlay.is-complete .completion-stats span {
+    min-height: 42px;
+    padding: 5px;
+    box-shadow: 2px 2px 0 var(--line);
+  }
+
+  .overlay.is-complete .completion-stats b {
+    font-size: 0.78rem;
+  }
+
+  .overlay.is-complete .completion-stats small {
+    font-size: 0.62rem;
+  }
+
+  .overlay.is-complete .value-actions {
+    gap: 4px;
+    padding-top: 6px;
+  }
+
+  .overlay.is-complete .value-actions p {
+    font-size: 0.78rem;
+  }
+
+  .overlay.is-complete .value-actions ul {
+    gap: 2px;
+  }
+
+  .overlay.is-complete .value-actions li {
+    padding-left: 12px;
+    font-size: clamp(0.66rem, 2.35vh, 0.76rem);
+    line-height: 1.25;
+  }
+
+  .overlay.is-complete .value-actions li::before {
+    top: 0.48em;
+    width: 5px;
+    height: 5px;
+    border-width: 1px;
+  }
+
+  .overlay.is-complete .modal__actions {
+    grid-area: actions;
+    margin-top: 2px;
+    padding-top: 7px;
+  }
+
+  .overlay.is-complete .primary-button {
+    min-height: 38px;
+    min-width: 132px;
   }
 
   .orientation-hint {
