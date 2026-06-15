@@ -14,6 +14,7 @@
   const startButton = document.querySelector("#startButton");
 
   const view = { width: 960, height: 540 };
+  const render = { scale: 1, offsetX: 0, offsetY: 0, width: view.width, height: view.height };
   const world = { width: 13200, height: 540, ground: 462 };
   const finishX = 12960;
   const gravity = 1850;
@@ -256,6 +257,7 @@
     const release = (event) => {
       event?.preventDefault?.();
       state.keys[direction] = false;
+      button.blur?.();
     };
     if (supportsPointerEvents) {
       button.addEventListener("pointerdown", press);
@@ -277,6 +279,7 @@
     event.preventDefault();
     jumpButton.setPointerCapture?.(event.pointerId);
     queueJump();
+    jumpButton.blur?.();
   };
   if (supportsPointerEvents) {
     jumpButton.addEventListener("pointerdown", jump);
@@ -299,6 +302,9 @@
     window.addEventListener("orientationchange", settleMobileViewport);
     window.addEventListener("resize", settleMobileViewport);
     window.addEventListener("contextmenu", (event) => event.preventDefault());
+    window.addEventListener("selectstart", (event) => event.preventDefault());
+    window.addEventListener("dragstart", (event) => event.preventDefault());
+    document.addEventListener("selectionchange", () => window.getSelection()?.removeAllRanges());
     settleMobileViewport();
   }
 
@@ -677,6 +683,11 @@
   }
 
   function draw() {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.setTransform(render.scale, 0, 0, render.scale, render.offsetX, render.offsetY);
     ctx.clearRect(0, 0, view.width, view.height);
     drawSky();
     ctx.save();
@@ -1189,7 +1200,13 @@
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(rect.width * dpr);
     canvas.height = Math.round(rect.height * dpr);
-    ctx.setTransform((rect.width * dpr) / view.width, 0, 0, (rect.height * dpr) / view.height, 0, 0);
+    const scale = Math.min(canvas.width / view.width, canvas.height / view.height);
+    render.scale = scale;
+    render.width = view.width * scale;
+    render.height = view.height * scale;
+    render.offsetX = (canvas.width - render.width) / 2;
+    render.offsetY = (canvas.height - render.height) / 2;
+    ctx.setTransform(scale, 0, 0, scale, render.offsetX, render.offsetY);
     draw();
   }
 
