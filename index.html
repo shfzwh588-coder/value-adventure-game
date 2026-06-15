@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="原创横版跳跃小游戏：操控负鼠穿过彩色关卡，收集五枚价值观徽章。"
+    />
+    <title>价值观超级大冒险</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="game-shell" aria-label="价值观超级大冒险">
+      <header class="hud">
+        <div class="brand">
+          <div>
+            <strong>价值观超级大冒险</strong>
+            <span>集齐五枚价值观徽章，开启通关挑战</span>
+          </div>
+        </div>
+
+        <div id="badgeRack" class="badge-rack" aria-label="价值观徽章"></div>
+
+        <div class="meters" aria-label="当前状态">
+          <span id="heartMeter" class="meter">♥♥♥</span>
+          <span id="scoreMeter" class="meter">0</span>
+          <span id="timeMeter" class="meter">00:00</span>
+        </div>
+      </header>
+
+      <section class="stage-frame" aria-label="游戏舞台">
+        <canvas id="gameCanvas" width="960" height="540"></canvas>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div id="overlay" class="overlay is-visible">
+          <div class="modal">
+            <p class="eyebrow">ORIGINAL PLATFORMER</p>
+            <h1 id="overlayTitle">价值观超级大冒险</h1>
+            <p id="overlayText">跑过云梯、弹簧和价值山谷，集齐五枚价值观徽章。负鼠支持二段跳，空中再按一次跳跃可以补救落点。</p>
+            <div id="overlayBadges" class="overlay-badges" aria-label="徽章清单"></div>
+            <div id="overlayMeaning" class="meaning-panel" hidden></div>
+            <div class="modal__actions">
+              <button id="startButton" class="primary-button" type="button">开始冒险</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nav class="touch-controls" aria-label="触控操作">
+        <button type="button" data-hold="left" aria-label="向左">←</button>
+        <button type="button" data-tap="jump" aria-label="跳跃">↑</button>
+        <button type="button" data-hold="right" aria-label="向右">→</button>
+      </nav>
+    </main>
+  </body>
+</html>
