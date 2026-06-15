@@ -941,17 +941,20 @@ canvas {
 
   .overlay.is-complete .modal {
     display: grid;
-    grid-template-columns: minmax(260px, 0.86fr) minmax(300px, 1.14fr);
+    position: relative;
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "eyebrow eyebrow"
-      "title title"
+      "eyebrow actions"
+      "title actions"
       "intro intro"
-      "badges meaning"
-      "actions actions";
+      "badges badges"
+      "meaning meaning";
     align-content: start;
-    gap: 5px 16px;
-    width: min(930px, calc(100vw - 36px));
-    padding: 12px 18px;
+    gap: 6px 14px;
+    width: min(920px, calc(100vw - 36px));
+    max-height: calc(var(--app-height, 100dvh) - 26px);
+    padding: 12px 18px 14px;
+    overflow: hidden;
   }
 
   .overlay.is-complete .eyebrow {
@@ -961,41 +964,50 @@ canvas {
 
   .overlay.is-complete .modal h1 {
     grid-area: title;
-    font-size: clamp(1.36rem, 5vh, 1.82rem);
+    font-size: clamp(1.4rem, 5.2vh, 1.95rem);
   }
 
   .overlay.is-complete #overlayText {
+    display: -webkit-box;
     grid-area: intro;
     margin-top: 0;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     font-size: clamp(0.78rem, 2.7vh, 0.9rem);
     line-height: 1.32;
   }
 
   .overlay.is-complete .overlay-badges {
     grid-area: badges;
-    align-self: start;
-    gap: 4px;
-    margin-top: 2px;
+    width: min(620px, 100%);
+    justify-self: center;
+    gap: clamp(8px, 2.6vw, 24px);
+    margin: 2px 0 0;
   }
 
   .overlay.is-complete .overlay-badges span {
-    min-height: 42px;
+    min-height: 50px;
   }
 
   .overlay.is-complete .overlay-badges b {
-    width: clamp(40px, 10vh, 56px);
-    height: clamp(40px, 10vh, 56px);
+    width: clamp(44px, 11vh, 62px);
+    height: clamp(44px, 11vh, 62px);
   }
 
   .overlay.is-complete .meaning-panel {
     grid-area: meaning;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
+    gap: 12px;
+    align-items: stretch;
     margin-top: 0;
   }
 
   .overlay.is-complete .achievement-card {
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 8px;
+    gap: 10px;
+    align-content: center;
     padding-top: 0;
     border-top: 0;
   }
@@ -1014,7 +1026,7 @@ canvas {
   }
 
   .overlay.is-complete .achievement-card h2 {
-    font-size: clamp(0.92rem, 3vh, 1.08rem);
+    font-size: clamp(0.98rem, 3.2vh, 1.16rem);
   }
 
   .overlay.is-complete .achievement-card p:not(.achievement-card__label) {
@@ -1022,13 +1034,14 @@ canvas {
     margin-top: 4px;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     font-size: clamp(0.72rem, 2.5vh, 0.82rem);
     line-height: 1.32;
   }
 
   .overlay.is-complete .completion-stats {
     gap: 5px;
+    align-self: center;
   }
 
   .overlay.is-complete .completion-stats span {
@@ -1046,40 +1059,21 @@ canvas {
   }
 
   .overlay.is-complete .value-actions {
-    gap: 4px;
-    padding-top: 6px;
-  }
-
-  .overlay.is-complete .value-actions p {
-    font-size: 0.78rem;
-  }
-
-  .overlay.is-complete .value-actions ul {
-    gap: 2px;
-  }
-
-  .overlay.is-complete .value-actions li {
-    padding-left: 12px;
-    font-size: clamp(0.66rem, 2.35vh, 0.76rem);
-    line-height: 1.25;
-  }
-
-  .overlay.is-complete .value-actions li::before {
-    top: 0.48em;
-    width: 5px;
-    height: 5px;
-    border-width: 1px;
+    display: none;
   }
 
   .overlay.is-complete .modal__actions {
     grid-area: actions;
-    margin-top: 2px;
-    padding-top: 7px;
+    align-self: center;
+    justify-self: end;
+    margin: 0;
+    padding: 0;
+    border-top: 0;
   }
 
   .overlay.is-complete .primary-button {
-    min-height: 38px;
-    min-width: 132px;
+    min-height: 40px;
+    min-width: 128px;
   }
 
   .orientation-hint {
