@@ -840,10 +840,10 @@
   function draw() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const hasPaintedForest = forestBackgroundImage.complete && forestBackgroundImage.naturalWidth;
+    fillCanvasBacking();
     ctx.setTransform(render.scale, 0, 0, render.scale, render.offsetX, render.offsetY);
-    ctx.clearRect(0, 0, view.width, view.height);
+    if (!hasPaintedForest) ctx.clearRect(0, 0, view.width, view.height);
     drawSky();
     ctx.save();
     ctx.translate(-state.cameraX, 0);
@@ -862,9 +862,38 @@
     ctx.restore();
   }
 
+  function fillCanvasBacking() {
+    if (forestBackgroundImage.complete && forestBackgroundImage.naturalWidth) {
+      const imageRatio = forestBackgroundImage.naturalWidth / forestBackgroundImage.naturalHeight;
+      const canvasRatio = canvas.width / canvas.height;
+      let drawW = canvas.width;
+      let drawH = canvas.height;
+      let drawX = 0;
+      let drawY = 0;
+      if (canvasRatio > imageRatio) {
+        drawH = canvas.width / imageRatio;
+        drawY = (canvas.height - drawH) / 2;
+      } else {
+        drawW = canvas.height * imageRatio;
+        drawX = (canvas.width - drawW) / 2;
+      }
+      ctx.drawImage(forestBackgroundImage, drawX, drawY, drawW, drawH);
+      ctx.fillStyle = "rgba(244, 238, 190, 0.12)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
+
+    const backing = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    backing.addColorStop(0, "#c8dfbd");
+    backing.addColorStop(0.5, "#e5efc8");
+    backing.addColorStop(1, "#6c8b55");
+    ctx.fillStyle = backing;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
   function drawSky() {
     if (forestBackgroundImage.complete && forestBackgroundImage.naturalWidth) {
-      drawPaintedForestBackdrop();
+      drawPaintedForestAtmosphere();
       drawScreenFireflies();
       return;
     }
@@ -904,12 +933,7 @@
     drawScreenFireflies();
   }
 
-  function drawPaintedForestBackdrop() {
-    const parallax = (state.cameraX * 0.055) % view.width;
-    for (let i = -1; i <= 1; i += 1) {
-      ctx.drawImage(forestBackgroundImage, -parallax + i * view.width, 0, view.width, view.height);
-    }
-
+  function drawPaintedForestAtmosphere() {
     const topAir = ctx.createLinearGradient(0, 0, 0, view.height);
     topAir.addColorStop(0, "rgba(235, 255, 230, 0.16)");
     topAir.addColorStop(0.46, "rgba(255, 244, 185, 0.08)");
