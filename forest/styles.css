@@ -489,13 +489,11 @@ canvas {
 }
 
 .overlay.is-complete .modal__actions {
-  position: sticky;
-  bottom: 0;
   z-index: 2;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 2px solid rgba(23, 32, 51, 0.16);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), #ffffff 32%);
+  margin-top: 18px;
+  padding-top: 0;
+  border-top: 0;
+  background: transparent;
 }
 
 .primary-button {
