@@ -90,7 +90,11 @@
   playerImage.decoding = "async";
   playerImage.src = "assets/optimized/opossum-q-sprite.webp";
   playerImage.addEventListener("load", draw);
-  const requiredAssetImages = [...badgeImages.values(), playerImage];
+  const forestBackgroundImage = new Image();
+  forestBackgroundImage.decoding = "async";
+  forestBackgroundImage.src = "assets/backgrounds/healing-forest-bg.webp";
+  forestBackgroundImage.addEventListener("load", draw);
+  const requiredAssetImages = [...badgeImages.values(), playerImage, forestBackgroundImage];
   const assetState = {
     ready: false,
     failed: false,
@@ -859,6 +863,12 @@
   }
 
   function drawSky() {
+    if (forestBackgroundImage.complete && forestBackgroundImage.naturalWidth) {
+      drawPaintedForestBackdrop();
+      drawScreenFireflies();
+      return;
+    }
+
     const sky = ctx.createLinearGradient(0, 0, 0, view.height);
     sky.addColorStop(0, "#a7d9ca");
     sky.addColorStop(0.45, "#dceecf");
@@ -894,39 +904,40 @@
     drawScreenFireflies();
   }
 
+  function drawPaintedForestBackdrop() {
+    const parallax = (state.cameraX * 0.055) % view.width;
+    for (let i = -1; i <= 1; i += 1) {
+      ctx.drawImage(forestBackgroundImage, -parallax + i * view.width, 0, view.width, view.height);
+    }
+
+    const topAir = ctx.createLinearGradient(0, 0, 0, view.height);
+    topAir.addColorStop(0, "rgba(235, 255, 230, 0.16)");
+    topAir.addColorStop(0.46, "rgba(255, 244, 185, 0.08)");
+    topAir.addColorStop(1, "rgba(28, 48, 31, 0.18)");
+    ctx.fillStyle = topAir;
+    ctx.fillRect(0, 0, view.width, view.height);
+
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.strokeStyle = "#fff3b7";
+    ctx.lineWidth = 34;
+    for (let i = 0; i < 5; i += 1) {
+      ctx.beginPath();
+      ctx.moveTo(84 + i * 26, -10);
+      ctx.lineTo(270 + i * 110, view.height);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   function drawDistantCity() {
     ctx.save();
-    ctx.translate(state.cameraX * 0.52, 0);
-
-    const farHill = ctx.createLinearGradient(0, 205, 0, 450);
-    farHill.addColorStop(0, "#a7cc94");
-    farHill.addColorStop(1, "#d9e9b7");
-    ctx.fillStyle = farHill;
-    ctx.beginPath();
-    ctx.moveTo(-260, 430);
-    for (let x = -260; x < world.width + 680; x += 420) {
-      ctx.quadraticCurveTo(x + 180, 250 + Math.sin(x * 0.002) * 28, x + 420, 430);
-    }
-    ctx.lineTo(world.width + 680, view.height);
-    ctx.lineTo(-260, view.height);
-    ctx.closePath();
-    ctx.fill();
-
-    for (let x = -380; x < world.width + 760; x += 128) {
-      const scale = 0.8 + ((Math.abs(x) / 47) % 4) * 0.09;
-      const baseY = 407 + Math.sin(x * 0.018) * 10;
-      const color = x % 256 === 0 ? "#5c9671" : "#6fa77c";
-      drawFarTree(x, baseY, scale, color);
-    }
-
-    for (let x = -260; x < world.width + 620; x += 260) {
-      const y = 432 + Math.sin(x * 0.01) * 7;
-      drawLeafCluster(x + 34, y - 36, 48, x % 520 === 0 ? "#4f8a65" : "#5f9b70", 0.78);
-    }
-
-    drawForestCottage(650, 356, 0.92);
-    drawForestCottage(4630, 358, 0.72);
-    drawForestCottage(9680, 354, 0.78);
+    const mist = ctx.createLinearGradient(0, 245, 0, 462);
+    mist.addColorStop(0, "rgba(233, 247, 215, 0)");
+    mist.addColorStop(0.45, "rgba(230, 246, 218, 0.25)");
+    mist.addColorStop(1, "rgba(244, 238, 190, 0.08)");
+    ctx.fillStyle = mist;
+    ctx.fillRect(-state.cameraX, 240, world.width + view.width, 230);
 
     drawForestWatcher(1180, 416, "round");
     drawForestWatcher(3340, 420, "deer");
@@ -937,7 +948,7 @@
     for (let i = 0; i < 90; i += 1) {
       const x = ((i * 173 + Math.sin(i) * 40) % world.width) - 100;
       const y = 152 + ((i * 71) % 250);
-      drawFirefly(x, y, i, 0.42);
+      drawFirefly(x, y, i, 0.34);
     }
     ctx.restore();
   }
