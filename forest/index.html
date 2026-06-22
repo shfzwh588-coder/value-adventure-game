@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="价值观森林大冒险" />
+    <meta name="screen-orientation" content="landscape" />
+    <meta name="x5-orientation" content="landscape" />
+    <meta name="full-screen" content="yes" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="browsermode" content="application" />
+    <meta name="x5-page-mode" content="app" />
+    <meta
+      name="description"
+      content="原创横版跳跃小游戏：操控负鼠穿过治愈森林、萤火微光和林间小屋，收集五枚价值观徽章。"
+    />
+    <title>价值观森林大冒险</title>
+    <link rel="preload" as="image" type="image/webp" href="assets/optimized/value-badges/客户第一.webp" />
+    <link rel="preload" as="image" type="image/webp" href="assets/optimized/value-badges/团队协作.webp" />
+    <link rel="preload" as="image" type="image/webp" href="assets/optimized/value-badges/拼搏进取.webp" />
+    <link rel="preload" as="image" type="image/webp" href="assets/optimized/value-badges/持续学习.webp" />
+    <link rel="preload" as="image" type="image/webp" href="assets/optimized/value-badges/创新创业.webp" />
+    <link rel="preload" as="image" type="image/webp" href="assets/optimized/opossum-q-sprite.webp" />
+    <link rel="stylesheet" href="styles.css?v=20260622-forest1" />
+    <script src="app.js?v=20260622-forest1" defer></script>
+  </head>
+  <body>
+    <main class="game-shell" aria-label="价值观森林大冒险">
+      <header class="hud">
+        <div class="brand">
+          <div>
+            <strong>价值观森林大冒险</strong>
+            <span>穿过萤火森林，集齐五枚价值观徽章</span>
+          </div>
+        </div>
+
+        <div id="badgeRack" class="badge-rack" aria-label="价值观徽章"></div>
+
+        <div class="meters" aria-label="当前状态">
+          <span id="heartMeter" class="meter">♥♥♥</span>
+          <span id="scoreMeter" class="meter">0</span>
+          <span id="timeMeter" class="meter">00:00</span>
+        </div>
+      </header>
+
+      <section class="stage-frame" aria-label="游戏舞台">
+        <canvas id="gameCanvas" width="960" height="540"></canvas>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div id="overlay" class="overlay is-visible">
+          <div class="modal">
+            <p class="eyebrow">HEALING FOREST PLATFORMER</p>
+            <h1 id="overlayTitle">价值观森林大冒险</h1>
+            <p id="overlayText">穿过绿意林间、木桥和萤火微光，集齐五枚价值观徽章。负鼠支持二段跳，空中再按一次跳跃可以补救落点。</p>
+            <div id="overlayBadges" class="overlay-badges" aria-label="徽章清单"></div>
+            <div id="overlayMeaning" class="meaning-panel" hidden></div>
+            <div class="modal__actions">
+              <button id="startButton" class="primary-button" type="button">开始冒险</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nav class="touch-controls" aria-label="触控操作">
+        <button type="button" data-hold="left" aria-label="向左">←</button>
+        <button type="button" data-tap="jump" aria-label="跳跃">↑</button>
+        <button type="button" data-hold="right" aria-label="向右">→</button>
+      </nav>
+    </main>
+    <div class="orientation-hint" aria-live="polite">
+      <div>
+        <strong>请横屏体验</strong>
+        <span>价值观森林大冒险横屏游玩更顺手</span>
+        <button id="orientationContinue" class="orientation-continue" type="button">已横屏，进入游戏</button>
+      </div>
+    </div>
+  </body>
+</html>
